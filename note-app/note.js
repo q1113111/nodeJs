@@ -1,8 +1,9 @@
 const fs = require('fs')
 const addNote = (title, body) => {
     const notes = loadNote()
-    const repeat = notes.filter(item => item.title === title)
-    if (repeat.length === 0) {
+    // const repeat = notes.filter(item => item.title === title)
+    const repeat = notes.find(item=>item.title===title)
+    if (!repeat) {
         notes.push({
             title,
             body
@@ -40,6 +41,16 @@ const loadNote = () => {
     }
 }
 
+const readNote = (title)=>{
+    const note = loadNote()
+    const findNote = note.find(item=>item.title===title)
+    if(findNote){
+        console.log(findNote.title)
+        console.log(findNote.body)
+    }else{
+        console.log('not find')
+    }
+}
 const listNode = ()=>{
     const note = loadNote()
     console.log('list:')
@@ -51,5 +62,6 @@ const listNode = ()=>{
 module.exports = {
     addNote,
     removeNote,
-    listNode
+    listNode,
+    readNote
 }
