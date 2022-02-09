@@ -1,8 +1,14 @@
 const fs = require('fs')
+/**
+ * 使用debugger 需搭配 node inspect app.js
+ * chrome://inspect/#devices 輸入該網址執行
+ * 使用restart重複執行
+ */
 const addNote = (title, body) => {
     const notes = loadNote()
     // const repeat = notes.filter(item => item.title === title)
     const repeat = notes.find(item=>item.title===title)
+    debugger
     if (!repeat) {
         notes.push({
             title,
