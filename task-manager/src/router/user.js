@@ -16,16 +16,17 @@ router.post('/user/logout', auth, async (req, res) => {
 router.get('/user/me', auth, async (req, res) => {
     res.send(req.user)
 })
-router.get('/user/:id', async (req, res) => {
-    const _id = req.params.id
-    try {
-        const user = await User.findById(_id)
-        if (!user) res.status(404).send()
-        res.send(user)
-    } catch (error) {
-        res.status(500).send()
-    }
-})
+//透過 登入驗證則不能再直接訪問
+// router.get('/user/:id', async (req, res) => {
+//     const _id = req.params.id
+//     try {
+//         const user = await User.findById(_id)
+//         if (!user) res.status(404).send()
+//         res.send(user)
+//     } catch (error) {
+//         res.status(500).send()
+//     }
+// })
 
 router.post('/user', async (req, res) => {
     console.log(req.body)
@@ -41,19 +42,19 @@ router.post('/user', async (req, res) => {
     }
 })
 
-router.patch('/user/:id', async (req, res) => {
+router.patch('/user/me', auth, async (req, res) => {
     const updateArr = Object.keys(req.body)
     const updateAllow = ['name', 'age', 'password', 'email', '__v']
     const state = updateArr.every(update => updateAllow.includes(update))
     if (!state) return res.status(400).send({ error: 'is not find key' })
-
-    const user = await User.findById(req.params.id)
+    //改成me 不需要了
+    // const user = await User.findById(req.params.id)
     updateArr.forEach(item => {
-        user[item] = req.body[item]
+        req.user[item] = req.body[item]
     })
-    await user.save()
-    if (!user) return res.status(404).send()
-    res.send(user)
+    await req.user.save()
+    if (!req.user) return res.status(404).send()
+    res.send(req.user)
     //無法觸發save()方法
     // try {
     //     const data = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
@@ -74,13 +75,21 @@ router.post('/user/login', async (req, res) => {
     }
 
 })
-router.delete('/user/:id', async (req, res) => {
+router.delete('/user/me', auth, async (req, res) => {
     try {
-        const data = await User.findByIdAndDelete(req.params.id)
+        await req.user.remove()
         res.status(200).send(data)
     } catch (error) {
         res.status(500).send(error)
     }
+
+    // :id的code
+    // try {
+    //     const data = await User.findByIdAndDelete(req.params.id)
+    //     res.status(200).send(data)
+    // } catch (error) {
+    //     res.status(500).send(error)
+    // }
 })
 
 module.exports = router
