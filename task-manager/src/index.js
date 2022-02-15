@@ -2,6 +2,7 @@ const express = require('express')
 require('./db/mongoose.js')
 const bcrypt = require('bcrypt');
 const userRouter = require('./router/user')
+const taskRouter = require('./router/task')
 const jwt = require('jsonwebtoken')
 
 const app = express()
@@ -9,6 +10,7 @@ const port = 3000
 
 app.use(express.json())
 app.use(userRouter)
+app.use(taskRouter)
 
 // 測試bcrypt
 const bcryptFn = async()=>{
