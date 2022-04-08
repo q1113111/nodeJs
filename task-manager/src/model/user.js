@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
+// 視圖 關聯task
+userSchema.virtual('tasks',{
+    ref:'Task',
+    localField:'_id',
+    foreignField:'owner'
+})
 // 自訂義登入驗證方法
 userSchema.statics.findByAccount = async (email, password) => {
     const user = await User.findOne({ email })
