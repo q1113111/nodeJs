@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); // 加密功能
 const jwt = require('jsonwebtoken')//驗證
-const validator = require('validator')
+const validator = require('validator');
+const Task = require('./task');
 
 //要使用  bcrypt 和 Middleware觸發轉換
 const userSchema = new mongoose.Schema({
@@ -64,7 +65,13 @@ userSchema.method('generateAuthToken', async (user)=> {
     await user.save()
     return token
 })
-
+// 關聯的task方法都會被刪除
+userSchema.pre('remove',async function(next){
+    const user = this
+    console.log('remove method is invoked...')
+    await Task.deleteMany({owner:user._id})
+     next()
+})
 userSchema.pre('save', async function () {
     const user = this
     if (user.isModified('password')) {

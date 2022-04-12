@@ -29,7 +29,6 @@ router.get('/user/me', auth, async (req, res) => {
 // })
 
 router.post('/user', async (req, res) => {
-    console.log(req.body)
     const newUser = new User(req.body)
     try {
         await newUser.save() // 儲存資料庫
@@ -80,6 +79,7 @@ router.delete('/user/me', auth, async (req, res) => {
         await req.user.remove()
         res.status(200).send(data)
     } catch (error) {
+        console.log(error)
         res.status(500).send(error)
     }
 

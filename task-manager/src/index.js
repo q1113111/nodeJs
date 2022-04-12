@@ -24,7 +24,7 @@ const main = async()=>{
     const user = await User.findById('620b324d041f4624e9a80105').populate('tasks')
     console.log(user.tasks)
 }
-main()
+// main()
 // 測試bcrypt
 const bcryptFn = async()=>{
     const password = 'Red12345'
