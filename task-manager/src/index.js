@@ -21,10 +21,10 @@ const main = async()=>{
     // const task = await Task.findById('620b3274041f4624e9a80112').populate('owner')
     // console.log(task.owner)
     // 在user.js使用視圖關聯
-    const user = await User.findById('620b324d041f4624e9a80105').populate('tasks')
+    const user = await User.findById('62550007d8b694a4500c36ad').populate('tasks')
     console.log(user.tasks)
 }
-// main()
+main()
 // 測試bcrypt
 const bcryptFn = async()=>{
     const password = 'Red12345'

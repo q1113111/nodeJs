@@ -65,7 +65,8 @@ router.patch('/user/me', auth, async (req, res) => {
 
 router.post('/user/login', async (req, res) => {
     try {
-        const user = await User.findByAccount(req.body.email, req.body.password)
+        console.log(req.body, res.body)
+        const user = await User.findByAccount(req.body.name, req.body.password)
         const userToken = new User
         const token = await userToken.generateAuthToken(user)
         res.send({ user, token })

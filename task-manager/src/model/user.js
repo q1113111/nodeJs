@@ -50,8 +50,9 @@ userSchema.virtual('tasks',{
     foreignField:'owner'
 })
 // 自訂義登入驗證方法
-userSchema.statics.findByAccount = async (email, password) => {
-    const user = await User.findOne({ email })
+userSchema.statics.findByAccount = async (name, password) => {
+    console.log(name)
+    const user = await User.findOne({ name })
     if (!user) throw Error('is not login')
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) throw Error('is not password')
