@@ -17,10 +17,16 @@ router.post('/tasks', auth, async (req, res) => {
 })
 // task?completed=true
 // 分頁 task?limit=10&skip=2
+// 時間排序 task?sortBy=createdAt:desc 降序排序
 router.get('/tasks', auth, async (req, res) => {
     const match = {}
-    if (req.query.completed !== undefined) {
+    const sort = {}
+    if (req.query.completed) {
         match.completed = req.query.completed
+    }
+    if (req.query.sortBy) {
+        const part = req.query.sortBy.split(':')
+        sort[part[0]] = part[1] === 'desc' ? -1 : 1
     }
     try {
         console.log(req.query.limit, req.query.skip);
@@ -30,6 +36,11 @@ router.get('/tasks', auth, async (req, res) => {
             options: {
                 limit: parseInt(req.query.limit),
                 skip: parseInt(req.query.skip),
+                // sort: {
+                //     // completed: 1// 1false先 -1true先
+                //     createdAt:
+                // }
+                sort
             }
         })
         res.send(req.user.tasks)
