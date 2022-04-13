@@ -22,7 +22,7 @@ const main = async()=>{
     // console.log(task.owner)
     // 在user.js使用視圖關聯
     const user = await User.findById('62550007d8b694a4500c36ad').populate('tasks')
-    console.log(user.tasks)
+    console.log(user.tasks,)
 }
 main()
 // 測試bcrypt

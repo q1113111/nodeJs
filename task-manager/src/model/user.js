@@ -36,18 +36,18 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    tokens:[{
-        token:{
-            type:String,
-            required:true
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
     }]
-})
+}, { timestamps: true })
 // 視圖 關聯task
-userSchema.virtual('tasks',{
-    ref:'Task',
-    localField:'_id',
-    foreignField:'owner'
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
 })
 // 自訂義登入驗證方法
 userSchema.statics.findByAccount = async (name, password) => {
@@ -60,18 +60,18 @@ userSchema.statics.findByAccount = async (name, password) => {
 }
 // userSchema.method('to')
 //自訂義 toke驗證
-userSchema.method('generateAuthToken', async (user)=> {
+userSchema.method('generateAuthToken', async (user) => {
     const token = jwt.sign({ _id: user._id.toString() }, 'isMyToken')
-    user.tokens =[...user.tokens,{token}]
+    user.tokens = [...user.tokens, { token }]
     await user.save()
     return token
 })
 // 關聯的task方法都會被刪除
-userSchema.pre('remove',async function(next){
+userSchema.pre('remove', async function (next) {
     const user = this
     console.log('remove method is invoked...')
-    await Task.deleteMany({owner:user._id})
-     next()
+    await Task.deleteMany({ owner: user._id })
+    next()
 })
 userSchema.pre('save', async function () {
     const user = this
