@@ -1,6 +1,7 @@
 const express = require('express')
 const { User } = require('../model/user')
 const auth = require('../middleware/auth')
+const multer = require('multer')
 const router = new express.Router()
 
 router.post('/user/logout', auth, async (req, res) => {
@@ -75,6 +76,51 @@ router.post('/user/login', async (req, res) => {
     }
 
 })
+
+const upload = multer({
+    // dest: 'avatars',
+    limits: {
+        fieldSize: 100000 //限制檔案大小
+    },
+    // 副檔名判斷
+    fileFilter(req, file, callback) {
+        if (!file.originalname.match(/\.(jpg|png|jpeg)$/)) {
+            return callback(new Error('please upload a picture!'))
+        }
+        callback(undefined, true)
+    }
+})
+// 上傳檔案
+// single('avatar')的avatar為上傳檔案的key
+router.post('/user/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer
+    await req.user.save()
+    res.send()
+}, (error, req, res, next) => {
+    // 客製錯誤訊息
+    res.status(400).send({ error: error.message })
+})
+
+// 刪除檔案
+router.delete('/user/me/avatar', auth, async (req, res) => {
+    req.user.avatar = undefined
+    await req.user.save()
+    res.send()
+})
+// 透過用戶ID取得頭像
+router.get('/user/:id/avatar', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        if (!user || !user.avatar) {
+            throw new Error()
+        }
+        res.set('Content-Type', 'image/jpg')
+        res.send(user.avatar)
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+})
+
 router.delete('/user/me', auth, async (req, res) => {
     try {
         await req.user.remove()

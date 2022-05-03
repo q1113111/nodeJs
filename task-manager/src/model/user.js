@@ -41,7 +41,10 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: {
+        type: Buffer
+    }
 }, { timestamps: true })
 // 視圖 關聯task
 userSchema.virtual('tasks', {
