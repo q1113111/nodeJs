@@ -64,7 +64,7 @@ userSchema.statics.findByAccount = async (name, password) => {
 // userSchema.method('to')
 //自訂義 toke驗證
 userSchema.method('generateAuthToken', async (user) => {
-    const token = jwt.sign({ _id: user._id.toString() }, 'isMyToken')
+    const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
     user.tokens = [...user.tokens, { token }]
     await user.save()
     return token

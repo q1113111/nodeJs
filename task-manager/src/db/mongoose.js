@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const { User } = require('../model/user')
 // 後面為數據庫名稱
-mongoose.connect('mongodb://localhost:27017/task-manager-api');
+// mongoose.connect('mongodb://localhost:27017/task-manager-api');
+mongoose.connect(process.env.MOONGODB_URL);
 
 
 // const me = new User({
